@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include "bat/ads/internal/account/confirmations/confirmation_info.h"
+#include "bat/ads/confirmation_type.h"
 #include "bat/ads/internal/database/tables/conversion_queue_database_table.h"
 #include "bat/ads/internal/logging.h"
 #include "bat/ads/internal/tokens/redeem_unblinded_token/user_data/confirmation_build_channel_dto_user_data.h"
@@ -20,7 +20,9 @@ namespace ads {
 namespace dto {
 namespace user_data {
 
-void Build(const ConfirmationInfo& confirmation, Callback callback) {
+void Build(const std::string& creative_instance_id,
+           const ConfirmationType& confirmation_type,
+           Callback callback) {
   base::DictionaryValue user_data;
 
   const base::DictionaryValue platform_user_data = GetPlatform();
@@ -35,14 +37,14 @@ void Build(const ConfirmationInfo& confirmation, Callback callback) {
   const base::DictionaryValue experiment_user_data = GetExperiment();
   user_data.MergeDictionary(&experiment_user_data);
 
-  if (confirmation.type != ConfirmationType::kConversion) {
+  if (confirmation_type != ConfirmationType::kConversion) {
     callback(user_data);
     return;
   }
 
   database::table::ConversionQueue database_table;
   database_table.GetForCreativeInstanceId(
-      confirmation.creative_instance_id,
+      creative_instance_id,
       [=, &user_data](const Result result,
                       const std::string& creative_instance_id,
                       const ConversionQueueItemList& conversion_queue_items) {

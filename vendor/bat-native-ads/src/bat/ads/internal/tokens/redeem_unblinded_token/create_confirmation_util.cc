@@ -5,9 +5,11 @@
 
 #include "bat/ads/internal/tokens/redeem_unblinded_token/create_confirmation_util.h"
 
+#include <memory>
 #include <utility>
 
 #include "base/base64url.h"
+#include "base/json/json_reader.h"
 #include "base/json/json_writer.h"
 #include "bat/ads/internal/account/confirmations/confirmation_info.h"
 #include "bat/ads/internal/logging.h"
@@ -22,8 +24,7 @@ using challenge_bypass_ristretto::VerificationKey;
 using challenge_bypass_ristretto::VerificationSignature;
 
 std::string CreateConfirmationRequestDTO(
-    const ConfirmationInfo& confirmation,
-    const base::DictionaryValue& user_data) {
+    const ConfirmationInfo& confirmation) {
   base::Value dto(base::Value::Type::DICTIONARY);
 
   dto.SetKey("creativeInstanceId",
@@ -38,7 +39,14 @@ std::string CreateConfirmationRequestDTO(
   const std::string type = std::string(confirmation.type);
   dto.SetKey("type", base::Value(type));
 
-  dto.MergeDictionary(&user_data);
+  base::Optional<base::Value> user_data =
+      base::JSONReader::Read(confirmation.user_data);
+  if (user_data && user_data->is_dict()) {
+    base::DictionaryValue* user_data_dictionary = nullptr;
+    if (user_data->GetAsDictionary(&user_data_dictionary)) {
+      dto.MergeDictionary(user_data_dictionary);
+    }
+  }
 
   std::string json;
   base::JSONWriter::Write(dto, &json);

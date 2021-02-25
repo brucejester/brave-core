@@ -18,9 +18,7 @@ namespace privacy {
 struct UnblindedTokenInfo;
 }  // namespace privacy
 
-std::string CreateConfirmationRequestDTO(
-    const ConfirmationInfo& confirmation,
-    const base::DictionaryValue& user_data);
+std::string CreateConfirmationRequestDTO(const ConfirmationInfo& confirmation);
 
 std::string CreateCredential(const privacy::UnblindedTokenInfo& unblinded_token,
                              const std::string& payload);

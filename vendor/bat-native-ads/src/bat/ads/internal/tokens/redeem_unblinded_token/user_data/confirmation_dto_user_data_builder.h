@@ -13,14 +13,16 @@
 
 namespace ads {
 
-struct ConfirmationInfo;
+class ConfirmationType;
 
 namespace dto {
 namespace user_data {
 
 using Callback = std::function<void(const base::DictionaryValue&)>;
 
-void Build(const ConfirmationInfo& confirmation, Callback callback);
+void Build(const std::string& creative_instance_id,
+           const ConfirmationType& confirmation_type,
+           Callback callback);
 
 }  // namespace user_data
 }  // namespace dto

@@ -46,16 +46,14 @@ bool Verify(const ConfirmationInfo& confirmation) {
     return false;
   }
 
-  base::DictionaryValue user_data;
-  const std::string payload =
-      CreateConfirmationRequestDTO(confirmation, user_data);
-
   UnblindedToken unblinded_token = confirmation.unblinded_token.value;
   VerificationKey verification_key = unblinded_token.derive_verification_key();
   if (privacy::ExceptionOccurred()) {
     NOTREACHED();
     return false;
   }
+
+  const std::string payload = CreateConfirmationRequestDTO(confirmation);
 
   return verification_key.verify(verification_signature, payload);
 }

@@ -49,28 +49,22 @@ void RedeemUnblindedToken::set_delegate(
 void RedeemUnblindedToken::Redeem(const ConfirmationInfo& confirmation) {
   BLOG(1, "Redeem unblinded token");
 
-  dto::user_data::Build(confirmation, [=](const base::DictionaryValue&) {
-    if (!confirmation.created) {
-      // CreateConfirmation(confirmation, user_data);
-      CreateConfirmation(confirmation);
-      return;
-    }
+  if (!confirmation.created) {
+    CreateConfirmation(confirmation);
+    return;
+  }
 
-    FetchPaymentToken(confirmation);
-  });
+  FetchPaymentToken(confirmation);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-// void CreateConfirmation(confirmation, user_data) {
 void RedeemUnblindedToken::CreateConfirmation(
     const ConfirmationInfo& confirmation) {
   BLOG(1, "CreateConfirmation");
   BLOG(2, "POST /v1/confirmation/{confirmation_id}/{credential}");
 
   CreateConfirmationUrlRequestBuilder url_request_builder(confirmation);
-  // CreateConfirmationUrlRequestBuilder url_request_builder(confirmation,
-  // user_data);
   UrlRequestPtr url_request = url_request_builder.Build();
   BLOG(5, UrlRequestToString(url_request));
   BLOG(7, UrlRequestHeadersToString(url_request));
