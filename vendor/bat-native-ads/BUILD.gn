@@ -515,6 +515,8 @@ source_set("ads") {
     "src/bat/ads/internal/server/rewards_server_util.cc",
     "src/bat/ads/internal/server/rewards_server_util.h",
     "src/bat/ads/internal/server/url_request_builder.h",
+    "src/bat/ads/internal/settings/settings.cc",
+    "src/bat/ads/internal/settings/settings.h",
     "src/bat/ads/internal/string_util.cc",
     "src/bat/ads/internal/string_util.h",
     "src/bat/ads/internal/tab_manager/tab_info.cc",
